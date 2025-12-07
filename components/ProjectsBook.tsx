@@ -2,7 +2,6 @@
 
 import dynamic from "next/dynamic";
 import Image from "next/image";
-import React from "react";
 
 // react-page-flip doesn't like SSR, so we load it only on the client
 const HTMLFlipBook = dynamic(
@@ -10,8 +9,8 @@ const HTMLFlipBook = dynamic(
   { ssr: false }
 );
 
-const PAGE_WIDTH = 360;   // single page width (portrait)
-const PAGE_HEIGHT = 520;  // single page height (portrait)
+const PAGE_WIDTH = 360;   // single page width
+const PAGE_HEIGHT = 520;  // single page height
 
 function StaticBaseSpread() {
   return (
@@ -110,11 +109,35 @@ function NotesTextPage() {
         <p className="w-[90%] text-[11px] leading-relaxed text-neutral-800">
           Notes app using Amazon Web Services to store data.
         </p>
+
         <p className="mt-4 text-[10px] text-neutral-600">Visit the site published on github pages: </p>
-        <a href="https://rosa-ammala.github.io/angular_calendar/" className=" text-[11px] text-neutral-800 underline underline-offset-2 hover:bg-orange-50">https://rosa-ammala.github.io/angular_calendar/</a>
+        <a 
+          href="https://rosa-ammala.github.io/angular_calendar/" 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          className="
+            text-[11px] text-neutral-800 
+            underline underline-offset-2 
+            hover:bg-orange-50"
+        >
+          https://rosa-ammala.github.io/angular_calendar/
+        </a>
+
         <p className="mt-4 text-[10px] text-neutral-600">See the source code: </p>
-        <a href="https://github.com/rosa-ammala/angular_calendar" className="text-[11px] text-neutral-800 underline underline-offset-2 hover:bg-orange-50">https://github.com/rosa-ammala/angular_calendar</a>
+        <a 
+          href="https://github.com/rosa-ammala/angular_calendar" 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          className="
+            text-[11px] text-neutral-800 
+            underline underline-offset-2 
+            hover:bg-orange-50"
+        >
+          https://github.com/rosa-ammala/angular_calendar
+        </a>
+        
         <p className="mt-4 text-[10px] text-neutral-600">Year: January 2025</p>
+
         <p className="mt-4 text-[10px] text-neutral-600">Tools:</p>
         <div className="w-[90%] flex flex-row gap-2 mt-2">
           <Image
@@ -178,11 +201,35 @@ function CalendarTextPage() {
           and the calendar view can be switched as needed. 
           All events are saved to local storage, ensuring they persist even if the browser tab is closed and reopened.
         </p>
+
         <p className="mt-4 text-[10px] text-neutral-600">Visit the site published on github pages: </p>
-        <a href="https://rosa-ammala.github.io/angular_calendar/" className=" text-[11px] text-neutral-800 underline underline-offset-2 hover:bg-orange-50">https://rosa-ammala.github.io/angular_calendar/</a>
+        <a 
+          href="https://rosa-ammala.github.io/angular_calendar/"
+          target="_blank" 
+          rel="noopener noreferrer" 
+          className="
+            text-[11px] text-neutral-800 
+            underline underline-offset-2 
+            hover:bg-orange-50"
+        >
+          https://rosa-ammala.github.io/angular_calendar/
+        </a>
+        
         <p className="mt-4 text-[10px] text-neutral-600">See the source code: </p>
-        <a href="https://github.com/rosa-ammala/angular_calendar" className="text-[11px] text-neutral-800 underline underline-offset-2 hover:bg-orange-50">https://github.com/rosa-ammala/angular_calendar</a>
+        <a 
+          href="https://github.com/rosa-ammala/angular_calendar" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="
+            text-[11px] text-neutral-800 
+            underline underline-offset-2 
+            hover:bg-orange-50"
+        >
+          https://github.com/rosa-ammala/angular_calendar
+        </a>
+        
         <p className="mt-4 text-[10px] text-neutral-600">Year: January 2025</p>
+        
         <p className="mt-4 text-[10px] text-neutral-600">Tools:</p>
         <div className="w-[90%] flex flex-row gap-2 mt-2">
           <Image
@@ -232,17 +279,37 @@ function RecipesTextPage() {
           height={100}
           className="mb-5"
         />
-        {/* <p className="mb-2 text-[10px] tracking-[0.35em] uppercase text-neutral-700">
-          Recipes
-        </p> */}
         <p className="w-[90%] text-[11px] leading-relaxed text-neutral-800">
           Rosa&apos;s Recipes is a website that I created to learn about the basics of working with WordPress. 
           This included customizing themes, managing plugins, and integrationg widgets.
         </p>
+        
         <p className="mt-4 text-[10px] text-neutral-600">Visit the site published on github pages: </p>
-        <a href="https://rosa-ammala.github.io/rosas-recipes/" className=" text-[11px] text-neutral-800 underline underline-offset-2 hover:bg-orange-50">https://rosa-ammala.github.io/rosas-recipes/</a>
+        <a 
+          href="https://rosa-ammala.github.io/rosas-recipes/" 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          className="
+            text-[11px] text-neutral-800 
+            underline underline-offset-2 
+            hover:bg-orange-50"
+        >
+          https://rosa-ammala.github.io/rosas-recipes/
+        </a>
+        
         <p className="mt-4 text-[10px] text-neutral-600">See the source code: </p>
-        <a href="https://github.com/rosa-ammala/rosas-recipes" className="text-[11px] text-neutral-800 underline underline-offset-2 hover:bg-orange-50">https://github.com/rosa-ammala/rosas-recipes</a>
+        <a 
+          href="https://github.com/rosa-ammala/rosas-recipes" 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          className="
+            text-[11px] text-neutral-800 
+            underline underline-offset-2 
+            hover:bg-orange-50"
+        >
+          https://github.com/rosa-ammala/rosas-recipes
+        </a>
+        
         <p className="mt-4 text-[10px] text-neutral-600">Year: 2024</p>
         <p className="mt-4 text-[10px] text-neutral-600">Tools:</p>
         <div className="w-[90%] flex flex-row gap-2 mt-2">
@@ -269,8 +336,6 @@ function RecipesTextPage() {
 function RecipesImagePage() {
   return (
     <div className="book-page-inner flex flex-col gap-4 h-full w-full items-center justify-center bg-stone-200">
-      {/* placeholder for recipes screenshot */}
-      {/* <div className="w-[80%] h-[70%] bg-white shadow-[0_8px_16px_rgba(0,0,0,0.12)] border border-neutral-200" /> */}
       <Image 
         src="/recipes-home.png"
         alt="TypeScript Icon"

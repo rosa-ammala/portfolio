@@ -24,7 +24,14 @@ export default function Navbar() {
       px-6 sm:px-10 lg:px-16 
       font-handwritten text-2xl sm:text-3xl
     ">
-      <div className="mx-auto flex flex-col md:flex-row items-center justify-between gap-4 md:gap-8 xl:gap-12 max-w-6xl">
+      <div 
+        className="
+          mx-auto flex flex-col md:flex-row 
+          items-center justify-between 
+          gap-4 md:gap-8 xl:gap-12 
+          max-w-6xl
+          top-0 left-0 right-0 z-50
+        ">
         {/* vasen puoli */}
         <div className="flex items-center gap-6 sm:gap-10 xl:gap-16">
         {linksLeft.map((link) => (
@@ -56,7 +63,8 @@ export default function Navbar() {
             alt="Portfolio logo"
             width={160}
             height={70}
-            className="mx-auto w-[140px] sm:w-[160px] lg:w-[190px] h-auto"
+            priority
+            className="mx-auto w-[140px] sm:w-[160px] lg:w-[190px] h-auto z-10"
           />
         </div>
 

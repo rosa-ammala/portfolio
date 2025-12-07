@@ -3,12 +3,11 @@ import Image from "next/image";
 export default function Hero() {
   return (
     <section className="
-      relative w-full min-h-screen 
+      relative w-full min-h-[calc(100vh-80px)] 
       flex flex-col lg:flex-row 
       items-center justify-center 
       gap-8 lg:gap-20 
       px-6 sm:px-10 lg:px-20 
-      -mt-2 sm:-mt-4 md:-mt-0 lg:-mt-12
     ">
 
       {/* VASEN: vihko */}
@@ -22,6 +21,7 @@ export default function Hero() {
           alt="Notebook"
           width={450}
           height={300}
+          priority
           className="
             w-full min-w-[320px] sm:min-w-[420px] lg:min-w-[520px] 
             drop-shadow-2xl
@@ -42,6 +42,7 @@ export default function Hero() {
               alt="Rosa title"
               width={220}
               height={100}
+              priority
               className=""
             />
 
@@ -55,6 +56,7 @@ export default function Hero() {
               alt="Underline doodle"  
               width={200}
               height={100}
+              priority
               className=""
             />
           </div>
@@ -66,12 +68,14 @@ export default function Hero() {
               alt="Stars doodle"
               width={60}
               height={60}
+              priority
             />
             <Image
               src="/paper-plane.svg"
               alt="Paper plane"
               width={60}
               height={60}
+              priority
             />
           </div>
         </div>
@@ -88,6 +92,7 @@ export default function Hero() {
           alt="Me outside"
           width={150}
           height={150}
+          priority
           className="
             absolute top-0 left-0 
             w-[140px] sm:w-[180px] lg:w-[220px] 
@@ -101,6 +106,7 @@ export default function Hero() {
           alt="Paper clip photo"
           width={50}
           height={60}
+          priority
           className="
             absolute z-20
             top-7 sm:top-4 lg:top-8 
@@ -116,6 +122,7 @@ export default function Hero() {
           alt="Me photo"
           width={150}
           height={150}
+          priority
           className="
             absolute z-10
             top-16 sm:top-18 lg:top-24 
@@ -131,6 +138,7 @@ export default function Hero() {
           alt="That's me arrow"
           width={80}
           height={85}
+          priority
           className="
             absolute z-0
             top-[70%] sm:top-[76%] lg:top-[80%]

@@ -66,7 +66,7 @@ export default function Contact() {
               "
             >
               Rosa Ämmälä<br />
-              rosa.ammala@gmail.com
+              rosa{/* Bots */}.{/* get */}ammala{/* away */}@{/* from */}gmail{/* here */}.{/* ! */}com
             </p>
 
             <a

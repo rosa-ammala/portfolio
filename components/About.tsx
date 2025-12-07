@@ -7,7 +7,6 @@ export default function About() {
         relative w-full h-full
         flex items-center justify-center
         overflow-hidden
-        font-handwritten
       "
     >
       {/* WRAPPER: centers card + polaroid together */}
@@ -77,8 +76,8 @@ export default function About() {
               absolute
               top-[12%]
               left-1/2 -translate-x-1/2
-              w-[70%]
-              ml-20 sm:ml-20 md:ml-18 lg:ml-12
+              w-[98%]
+              pl-36 sm:pl-44 md:pl-44 lg:pl-32
               flex flex-col
             "
           >
@@ -101,7 +100,7 @@ export default function About() {
                   height={120}
                   className="w-[150px] sm:w-[260px] lg:w-[300px] mb-2 lg:mb-4"
                 />
-                <p>
+                <p className="text-[10px] sm:text-[11px] md:text-[13px] lg:text-[16px] tracking-wide">
                   I am a recently graduated engineer specialized in software
                   development. I combine analytical thinking, curiosity, and a
                   drive to create user-oriented solutions. I learn new
@@ -112,9 +111,9 @@ export default function About() {
                   clear communication and strong team collaboration.
                 </p>
 
-                <p className="text-[14px] sm:text-[16px] lg:text-[22px] mt-3 mb-1">Education</p>
+                <p className="text-[16px] sm:text-[20px] md:text-[24px] lg:text-[28px] mt-2 font-handwritten">Education</p>
 
-                <p>
+                <p className="text-[10px] sm:text-[11px] md:text-[13px] lg:text-[16px] tracking-wide">
                   Information and communication technology, engineer<br />
                   Jamk university of applied sciences<br />
                   2021 – 2025
@@ -123,11 +122,11 @@ export default function About() {
 
               {/* RIGHT SIDE – SKILLS */}
               <div className="flex-[1]">
-                <p className="text-[14px] sm:text-[16px] lg:text-[22px] mb-2 pt-4 ">Skills</p>
+                <p className="text-[16px] sm:text-[20px] md:text-[24px] lg:text-[28px] pt-4 font-handwritten">Skills</p>
 
                 <ul className="
                   space-y-1 
-                  text-[12px] sm:text-[14px] lg:text-[20px]
+                  text-[10px] sm:text-[11px] md:text-[13px] lg:text-[16px] tracking-wide
                   mb-4
                 ">
                   <li>• Team worker</li>

@@ -8,7 +8,6 @@ export default function Experience() {
         relative w-full h-full 
         flex items-center justify-center
         overflow-hidden
-        font-handwritten
       "
     >
       {/* WRAPPER: centers card + polaroid together */}
@@ -42,7 +41,7 @@ export default function Experience() {
             "
           >
 
-            <div className="flex flex-row gap-4 sm:gap-8">
+            <div className="flex flex-row gap-2">
 
               {/* LEFT TEXT */}
               <div 
@@ -61,27 +60,27 @@ export default function Experience() {
                   className="w-[250px] sm:w-[300px] lg:w-[400px] mb-2 lg:mb-4"
                 />
 
-                <p className="text-[15px] sm:text-[18px] lg:text-[26px] mt-3">
-                  MyHomesID Oy - Software Developer Project Worker
+                <p className="text-[16px] sm:text-[20px] md:text-[22px] lg:text-[26px] mt-3 font-handwritten">
+                  MyHomesID Oy - Software Developer Commission Worker
                 </p>  
-                <p className="text-[15px] sm:text-[18px] lg:text-[26px] -mt-2 mb-1">
+                <p className="text-[16px] sm:text-[20px] md:text-[24px] lg:text-[28px] -mt-2 mb-1 font-handwritten">
                   November 2025 - now
                 </p>
                 
-                <p>
+                <p className="text-[10px] sm:text-[11px] md:text-[13px] lg:text-[16px] tracking-wide">
                   Developing and improving the look and usability of a knowledge base product 
                   using Angular (TypeScript) in an AWS environment. 
                   Projects around developing a dynamic forms feature. 
                   Including reporting and documenting completed work.
                 </p>
 
-                <p className="text-[16px] sm:text-[18px] lg:text-[26px] mt-3 mb-1">
+                <p className="text-[16px] sm:text-[20px] md:text-[24px] lg:text-[28px] mt-3 mb-1 font-handwritten">
                   MyHomesID Oy - Software Developer Intern
                 </p>
-                <p className="text-[16px] sm:text-[18px] lg:text-[26px] -mt-4 mb-1">
+                <p className="text-[16px] sm:text-[20px] md:text-[24px] lg:text-[28px] -mt-4 mb-1 font-handwritten">
                   January 2025 - June 2025
                 </p>
-                <p>
+                <p className="text-[10px] sm:text-[11px] md:text-[13px] lg:text-[16px] tracking-wide">
                   Developing and improving the look and usability of a knowledge base product 
                   using Angular (TypeScript) in an AWS environment. 
                   Including reporting and documenting completed work.
@@ -89,8 +88,8 @@ export default function Experience() {
               </div>
 
               {/* RIGHT SIDE – TOOLS */}
-              <div className="flex-[1] mr-6">
-                <p className="text-[16px] sm:text-[20px] lg:text-[28px] mb-2 pt-12 ">
+              <div className="flex-[1]">
+                <p className="text-[16px] sm:text-[20px] md:text-[24px] lg:text-[28px] ml-4 mb-2 pt-12 font-handwritten">
                   Tools
                 </p>
 

@@ -17,7 +17,7 @@ export default function ToolsGrid() {
   ];
 
   return (
-    <section className="">
+    <section className="m-4">
 
       <div className="grid grid-cols-3 gap-6">
         {tools.map((tool) => (
@@ -31,7 +31,6 @@ export default function ToolsGrid() {
               height={32}
               className="
                 w-full
-                
               "
             />
           </div>
