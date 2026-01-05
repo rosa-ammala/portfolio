@@ -20,7 +20,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
         {children}
-        {/* <main className="pt-0"></main> */}
+        <SpeedInsights />
       </body>
     </html>
   );
