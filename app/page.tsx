@@ -37,6 +37,7 @@ export default function Home() {
           display: "flex",
           gap: 32,
           alignItems: "flex-start",
+          zIndex: 10,
         }}
       >
         {/* COLUMN 1 - LEFT ICONS */}

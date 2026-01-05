@@ -157,6 +157,55 @@ function LinkButton({ href, label }: { href: string; label: string }) {
   );
 }
 
+function ProjectListItem({
+  project,
+  onOpen,
+}: {
+  project: Project;
+  onOpen: () => void;
+}) {
+  const [hover, setHover] = useState(false);
+
+  return (
+    <button
+      onClick={onOpen}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      style={{
+        textAlign: "left",
+        border: "1px solid rgba(0,0,0,0.12)",
+        background: hover
+          ? "rgba(247, 199, 227, 1)"
+          : "rgba(253, 251, 247, 1)",
+        padding: "12px 12px",
+        borderRadius: 10,
+        cursor: "inherit",
+        transition: "background-color 160ms ease-out, transform 160ms ease-out",
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          gap: 12,
+          alignItems: "baseline",
+        }}
+      >
+        <strong style={{ fontSize: 14 }}>{project.name}</strong>
+        {project.year && (
+          <span style={{ fontSize: 12, opacity: 0.65 }}>{project.year}</span>
+        )}
+      </div>
+
+      <div style={{ fontSize: 12, opacity: 0.75, marginTop: 6 }}>
+        {project.stack.core.join(" • ")}
+        {project.stack.other.length ? ` • ${project.stack.other.join(" • ")}` : ""}
+      </div>
+    </button>
+  );
+}
+
+
 export function ProjectsWindow({
   openProjectId,
   onOpenProject,
@@ -178,37 +227,11 @@ export function ProjectsWindow({
         </p>
 
         {PROJECTS.map((p) => (
-          <button
+          <ProjectListItem
             key={p.id}
-            onClick={() => onOpenProject(p.id)}
-            style={{
-              textAlign: "left",
-              border: "1px solid rgba(0,0,0,0.12)",
-              background: "rgba(255,255,255,0.35)",
-              padding: "12px 12px",
-              borderRadius: 10,
-              cursor: "inherit",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                gap: 12,
-                alignItems: "baseline",
-              }}
-            >
-              <strong style={{ fontSize: 14 }}>{p.name}</strong>
-              {p.year && (
-                <span style={{ fontSize: 12, opacity: 0.65 }}>{p.year}</span>
-              )}
-            </div>
-
-            <div style={{ fontSize: 12, opacity: 0.75, marginTop: 6 }}>
-              {p.stack.core.join(" • ")}
-              {p.stack.other.length ? ` • ${p.stack.other.join(" • ")}` : ""}
-            </div>
-          </button>
+            project={p}
+            onOpen={() => onOpenProject(p.id)}
+          />
         ))}
       </div>
     );

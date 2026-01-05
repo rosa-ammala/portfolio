@@ -29,6 +29,7 @@ export function Window({
         boxShadow: "0 10px 30px rgba(0,0,0,0.15)",
         display: "flex",
         flexDirection: "column",
+        zIndex: 30,
       }}
     >
       <div
