@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { DesktopIcon } from "@/components/DesktopIcon";
 import { Window } from "@/components/Window";
 import { ProfileWindow } from "@/components/windows/ProfileWindow";
@@ -8,12 +8,131 @@ import { ContactWindow } from "@/components/windows/ContactWindow";
 import { ResumeWindow } from "@/components/windows/ResumeWindow";
 import { ProjectsWindow } from "@/components/windows/ProjectsWindow";
 
-type WindowType = null | "profile" | "resume" | "projects" | "contact";
+type WindowType = "profile" | "resume" | "projects" | "contact";
+
+type AppWindow = {
+  id: string;
+  type: WindowType;
+  z: number;
+
+  // only used by projects windows (per-window!)
+  openProjectId?: string | null;
+};
+
+function makeId() {
+  // good enough unique id for UI
+  return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+}
+
+function ProjectsHeaderLeft({
+  openProjectId,
+  onBack,
+}: {
+  openProjectId: string | null;
+  onBack: () => void;
+}) {
+  const [hover, setHover] = useState(false);
+
+  if (!openProjectId) {
+    return <span style={{ fontSize: 14 }}>Projects</span>;
+  }
+
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 10, minWidth: 0 }}>
+      <button
+        onPointerDown={(e) => {
+          e.stopPropagation();
+          e.preventDefault();
+        }}
+        onClick={(e) => {
+          e.stopPropagation();
+          onBack();
+        }}
+        onMouseEnter={() => setHover(true)}
+        onMouseLeave={() => setHover(false)}
+        style={{
+          width: 24,
+          height: 24,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: hover ? "rgba(201,164,255,0.5)" : "transparent",
+          border: "none",
+          borderRadius: 4,
+          color: "white",
+          fontSize: 14,
+          cursor: "pointer",
+          transition: "background-color 160ms ease-out",
+          padding: 0,
+          lineHeight: 1,
+        }}
+        aria-label="Back to Projects"
+        title="Back"
+      >
+        ←
+      </button>
+
+      <span
+        style={{
+          fontSize: 14,
+          whiteSpace: "nowrap",
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+        }}
+      >
+        Projects / {openProjectId}
+      </span>
+    </div>
+  );
+}
 
 export default function Home() {
-  const [open, setOpen] = useState<WindowType>("profile");
-  const [openProjectId, setOpenProjectId] = useState<string | null>(null);
-  const [hover, setHover] = useState(false);
+  const [windows, setWindows] = useState<AppWindow[]>(() => [
+    // Optional: open profile by default as its own window instance
+    { id: makeId(), type: "profile", z: 1 },
+  ]);
+
+  const maxZ = useMemo(
+    () => windows.reduce((m, w) => Math.max(m, w.z), 0),
+    [windows]
+  );
+
+  const focusWindow = (id: string) => {
+    setWindows((prev) => {
+      const current = prev.find((w) => w.id === id);
+      if (!current) return prev;
+
+      const top = prev.reduce((m, w) => Math.max(m, w.z), 0);
+      if (current.z === top) return prev;
+
+      return prev.map((w) => (w.id === id ? { ...w, z: top + 1 } : w));
+    });
+  };
+
+  const closeWindow = (id: string) => {
+    setWindows((prev) => prev.filter((w) => w.id !== id));
+  };
+
+  const openNewWindow = (type: WindowType) => {
+    setWindows((prev) => {
+      const top = prev.reduce((m, w) => Math.max(m, w.z), 0);
+      const base: AppWindow = {
+        id: makeId(),
+        type,
+        z: top + 1,
+      };
+      if (type === "projects") base.openProjectId = null;
+      return [...prev, base];
+    });
+  };
+
+  const setProjectsProjectId = (winId: string, projectId: string | null) => {
+    setWindows((prev) =>
+      prev.map((w) =>
+        w.id === winId ? { ...w, openProjectId: projectId } : w
+      )
+    );
+  };
 
   return (
     <main
@@ -41,47 +160,31 @@ export default function Home() {
         }}
       >
         {/* COLUMN 1 - LEFT ICONS */}
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: 24,
-          }}
-        >
+        <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
           <DesktopIcon
             label="Profile"
             icon="/folder.png"
-            onOpen={() => setOpen("profile")}
+            onOpen={() => openNewWindow("profile")}
           />
           <DesktopIcon
             label="Resume"
             icon="/folder.png"
-            onOpen={() => setOpen("resume")}
+            onOpen={() => openNewWindow("resume")}
           />
           <DesktopIcon
             label="Projects"
             icon="/folder.png"
-            onOpen={() => setOpen("projects")}
+            onOpen={() => openNewWindow("projects")}
           />
         </div>
 
         {/* COLUMN 2 - RIGHT ICONS */}
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: 24,
-          }}
-        >
-          <DesktopIcon
-            label="Secrets"
-            icon="/folder.png"
-            onOpen={() => {}}
-          />
+        <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+          <DesktopIcon label="Secrets" icon="/folder.png" onOpen={() => {}} />
           <DesktopIcon
             label="Contact"
             icon="/envelope.png"
-            onOpen={() => setOpen("contact")}
+            onOpen={() => openNewWindow("contact")}
           />
         </div>
       </div>
@@ -134,79 +237,81 @@ export default function Home() {
         </div>
       </div>
 
-      {/* WINDOWS */}
-      {open === "profile" && (
-        <Window title="Profile" onClose={() => setOpen(null)}>
-          <ProfileWindow />
-        </Window>
-      )}
-
-      {open === "resume" && (
-        <Window title="Resume" onClose={() => setOpen(null)}>
-          <ResumeWindow />
-        </Window>
-      )}
-
-      {open === "projects" && (
-        <Window
-          title="Projects"
-          onClose={() => {
-            setOpen(null);
-            setOpenProjectId(null);
-          }}
-          headerLeft={
-            openProjectId ? (
-              <div style={{ display: "flex", alignItems: "center", gap: 10, minWidth: 0 }}>
-                <button
-                  onClick={() => setOpenProjectId(null)}
-                  onMouseEnter={() => setHover(true)}
-                  onMouseLeave={() => setHover(false)}
-                  style={{
-                    width: 24,
-                    height: 24,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    backgroundColor: hover
-                      ? "rgba(201,164,255,0.5)"
-                      : "transparent",
-                    border: "none",
-                    borderRadius: 4,
-                    color: "white",
-                    fontSize: 14,
-                    cursor: "inherit",
-                    transition: "background-color 160ms ease-out",
-                    padding: 0,
-                    lineHeight: 1,
-                  }}
-                  aria-label="Back to Projects"
-                  title="Back"
-                >
-                  ←
-                </button>
-      
-                <span style={{ fontSize: 14, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                  Projects / {openProjectId}
-                </span>
-              </div>
-            ) : (
-              <span style={{ fontSize: 14 }}>Projects</span>
-            )
+      {/* WINDOWS (multiple) */}
+      {windows
+        .slice()
+        .sort((a, b) => a.z - b.z)
+        .map((w) => {
+          if (w.type === "profile") {
+            return (
+              <Window
+                key={w.id}
+                title="Profile"
+                zIndex={30 + w.z}
+                onFocus={() => focusWindow(w.id)}
+                onClose={() => closeWindow(w.id)}
+              >
+                <ProfileWindow />
+              </Window>
+            );
           }
-        >
-          <ProjectsWindow
-            openProjectId={openProjectId}
-            onOpenProject={(id) => setOpenProjectId(id)}
-            onBack={() => setOpenProjectId(null)}
-          />
-        </Window>
-      )}
 
-      {open === "contact" && (
-        <Window title="Contact" onClose={() => setOpen(null)}>
-          <ContactWindow />
-        </Window>
-      )}
+          if (w.type === "resume") {
+            return (
+              <Window
+                key={w.id}
+                title="Resume"
+                zIndex={30 + w.z}
+                onFocus={() => focusWindow(w.id)}
+                onClose={() => closeWindow(w.id)}
+              >
+                <ResumeWindow />
+              </Window>
+            );
+          }
+
+          if (w.type === "contact") {
+            return (
+              <Window
+                key={w.id}
+                title="Contact"
+                zIndex={30 + w.z}
+                onFocus={() => focusWindow(w.id)}
+                onClose={() => closeWindow(w.id)}
+              >
+                <ContactWindow />
+              </Window>
+            );
+          }
+
+          // Projects (per-window openProjectId + header back)
+          const hoverStateKey = `projects-hover-${w.id}`;
+          // we’ll do a tiny local hover in headerLeft with inline state below using closure is awkward;
+          // easiest: keep it simple: no hover in back button OR use CSS; here: no hover dependency.
+          const openProjectId = w.openProjectId ?? null;
+
+          return (
+            <Window
+              key={w.id}
+              title="Projects"
+              zIndex={30 + w.z}
+              onFocus={() => focusWindow(w.id)}
+              onClose={() => closeWindow(w.id)}
+              headerLeft={
+                <ProjectsHeaderLeft
+                  openProjectId={openProjectId}
+                  onBack={() => setProjectsProjectId(w.id, null)}
+                />
+              }
+            >
+              <ProjectsWindow
+                openProjectId={openProjectId}
+                onOpenProject={(id) => setProjectsProjectId(w.id, id)}
+                onBack={() => setProjectsProjectId(w.id, null)}
+              />
+            </Window>
+          );
+        })}
     </main>
   );
 }
