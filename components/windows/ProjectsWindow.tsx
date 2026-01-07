@@ -101,7 +101,7 @@ const PROJECTS: Project[] = [
       other: ["HTML5", "Inline styles", "Component patterns", "Vercel"],
     },
     description:
-      "A desktop-style portfolio that mimics an operating system UI. The goal was to create a playful experience while keeping the content easy to browse—especially on smaller screens.",
+      "A desktop-style portfolio that mimics an operating system UI. The goal was to create a playful experience while keeping the content easy to browse.",
     highlights: [
       "Desktop-style movable window system with shared Window component",
       "Scrollable window content with responsive size and viewport clamping",
