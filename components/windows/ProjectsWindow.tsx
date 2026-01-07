@@ -97,8 +97,8 @@ const PROJECTS: Project[] = [
     name: "Portfolio OS",
     year: "2026",
     stack: {
-      core: ["Next.js", "TypeScript", ],
-      other: ["HTML5", "Inline styles", "Component patterns", "Vercel"],
+      core: ["Next.js", "TypeScript", "Tailwind CSS" ],
+      other: ["HTML5", "Component patterns", "Vercel"],
     },
     description:
       "A desktop-style portfolio that mimics an operating system UI. The goal was to create a playful experience while keeping the content easy to browse.",

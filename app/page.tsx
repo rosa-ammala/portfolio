@@ -29,11 +29,6 @@ function makeId() {
   return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
 }
 
-function getTopWindow(windows: AppWindow[]) {
-  if (windows.length === 0) return null;
-  return windows.reduce((top, w) => (w.z > top.z ? w : top), windows[0]);
-}
-
 function ProjectsHeaderLeft({
   openProjectId,
   onBack,
@@ -98,14 +93,9 @@ function ProjectsHeaderLeft({
 
 export default function Home() {
   const [windows, setWindows] = useState<AppWindow[]>(() => [
-    // Optional: open profile by default as its own window instance
+    // Open profile by default as its own window instance
     { id: makeId(), type: "profile", z: 1 },
   ]);
-
-  const maxZ = useMemo(
-    () => windows.reduce((m, w) => Math.max(m, w.z), 0),
-    [windows]
-  );
 
   const focusWindow = (id: string) => {
     setWindows((prev) => {
@@ -127,7 +117,7 @@ export default function Home() {
     setWindows((prev) => {
       const top = prev.reduce((m, w) => Math.max(m, w.z), 0);
   
-      // 1) Jos sama type on jo auki → nosta se päällimmäiseksi
+      // 1) If same type exists → bring to front
       const existing = prev.find((w) => w.type === type);
       if (existing) {
         // HUOM: ei kosketa openFromRectia (ei “avaa uudestaan”), vain fokus
@@ -135,7 +125,7 @@ export default function Home() {
         return prev.map((w) => (w.id === existing.id ? { ...w, z: top + 1 } : w));
       }
   
-      // 2) Muuten luo uusi ikkuna
+      // 2) Create new window
       const base: AppWindow = {
         id: makeId(),
         type,
