@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 export function DesktopIcon({
   label,
@@ -7,13 +7,19 @@ export function DesktopIcon({
 }: {
   label: string;
   icon: string;
-  onOpen: () => void;
+  onOpen: (fromRect?: { left: number; top: number; width: number; height: number }) => void;
 }) {
   const [hovered, setHovered] = useState(false);
-  
+  const btnRef = useRef<HTMLButtonElement | null>(null);
+
   return (
     <button
-      onClick={onOpen}
+      ref={btnRef}
+      onClick={() => {
+        const r = btnRef.current?.getBoundingClientRect();
+        if (r) onOpen({ left: r.left, top: r.top, width: r.width, height: r.height });
+        else onOpen();
+      }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
@@ -31,23 +37,16 @@ export function DesktopIcon({
       <img
         src={icon}
         alt=""
-        style={{ 
-          width: 68, 
-          height: 68, 
+        style={{
+          width: 68,
+          height: 68,
           userSelect: "none",
           transform: hovered ? "translateY(-4px)" : "translateY(0)",
           transition: "transform 160ms ease-out",
         }}
         draggable={false}
       />
-      <span 
-        style={{ 
-          fontSize: 12, 
-          textAlign: "center" 
-          }}
-      >
-        {label}
-      </span>
+      <span style={{ fontSize: 12, textAlign: "center" }}>{label}</span>
     </button>
   );
 }

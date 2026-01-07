@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { DesktopIcon } from "@/components/DesktopIcon";
 import { Window } from "@/components/Window";
 import { ProfileWindow } from "@/components/windows/ProfileWindow";
@@ -10,6 +10,8 @@ import { ProjectsWindow } from "@/components/windows/ProjectsWindow";
 
 type WindowType = "profile" | "resume" | "projects" | "contact";
 
+type OpenFromRect = { left: number; top: number; width: number; height: number };
+
 type AppWindow = {
   id: string;
   type: WindowType;
@@ -17,11 +19,19 @@ type AppWindow = {
 
   // only used by projects windows (per-window!)
   openProjectId?: string | null;
+
+  // only used on first mount to animate "open from icon"
+  openFromRect?: OpenFromRect | null;
 };
 
 function makeId() {
   // good enough unique id for UI
   return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+}
+
+function getTopWindow(windows: AppWindow[]) {
+  if (windows.length === 0) return null;
+  return windows.reduce((top, w) => (w.z > top.z ? w : top), windows[0]);
 }
 
 function ProjectsHeaderLeft({
@@ -113,15 +123,27 @@ export default function Home() {
     setWindows((prev) => prev.filter((w) => w.id !== id));
   };
 
-  const openNewWindow = (type: WindowType) => {
+  const openOrFocusWindow = (type: WindowType, fromRect?: OpenFromRect) => {
     setWindows((prev) => {
       const top = prev.reduce((m, w) => Math.max(m, w.z), 0);
+  
+      // 1) Jos sama type on jo auki → nosta se päällimmäiseksi
+      const existing = prev.find((w) => w.type === type);
+      if (existing) {
+        // HUOM: ei kosketa openFromRectia (ei “avaa uudestaan”), vain fokus
+        if (existing.z === top) return prev;
+        return prev.map((w) => (w.id === existing.id ? { ...w, z: top + 1 } : w));
+      }
+  
+      // 2) Muuten luo uusi ikkuna
       const base: AppWindow = {
         id: makeId(),
         type,
         z: top + 1,
+        openFromRect: fromRect ?? null,
       };
       if (type === "projects") base.openProjectId = null;
+  
       return [...prev, base];
     });
   };
@@ -133,6 +155,26 @@ export default function Home() {
       )
     );
   };
+
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== "Escape") return;
+
+      setWindows((prev) => {
+        if (prev.length === 0) return prev;
+
+        const top = prev.reduce(
+          (a, b) => (b.z > a.z ? b : a),
+          prev[0]
+        );
+
+        return prev.filter((w) => w.id !== top.id);
+      });
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, []);
 
   return (
     <main
@@ -164,17 +206,17 @@ export default function Home() {
           <DesktopIcon
             label="Profile"
             icon="/folder.png"
-            onOpen={() => openNewWindow("profile")}
+            onOpen={(r) => openOrFocusWindow("profile", r)}
           />
           <DesktopIcon
             label="Resume"
             icon="/folder.png"
-            onOpen={() => openNewWindow("resume")}
+            onOpen={(r) => openOrFocusWindow("resume", r)}
           />
           <DesktopIcon
             label="Projects"
             icon="/folder.png"
-            onOpen={() => openNewWindow("projects")}
+            onOpen={(r) => openOrFocusWindow("projects", r)}
           />
         </div>
 
@@ -184,7 +226,7 @@ export default function Home() {
           <DesktopIcon
             label="Contact"
             icon="/envelope.png"
-            onOpen={() => openNewWindow("contact")}
+            onOpen={(r) => openOrFocusWindow("contact", r)}
           />
         </div>
       </div>
@@ -250,6 +292,7 @@ export default function Home() {
                 zIndex={30 + w.z}
                 onFocus={() => focusWindow(w.id)}
                 onClose={() => closeWindow(w.id)}
+                openFromRect={w.openFromRect ?? null}
               >
                 <ProfileWindow />
               </Window>
@@ -264,6 +307,7 @@ export default function Home() {
                 zIndex={30 + w.z}
                 onFocus={() => focusWindow(w.id)}
                 onClose={() => closeWindow(w.id)}
+                openFromRect={w.openFromRect ?? null}
               >
                 <ResumeWindow />
               </Window>
@@ -278,6 +322,7 @@ export default function Home() {
                 zIndex={30 + w.z}
                 onFocus={() => focusWindow(w.id)}
                 onClose={() => closeWindow(w.id)}
+                openFromRect={w.openFromRect ?? null}
               >
                 <ContactWindow />
               </Window>
@@ -285,9 +330,6 @@ export default function Home() {
           }
 
           // Projects (per-window openProjectId + header back)
-          const hoverStateKey = `projects-hover-${w.id}`;
-          // we’ll do a tiny local hover in headerLeft with inline state below using closure is awkward;
-          // easiest: keep it simple: no hover in back button OR use CSS; here: no hover dependency.
           const openProjectId = w.openProjectId ?? null;
 
           return (
@@ -297,6 +339,7 @@ export default function Home() {
               zIndex={30 + w.z}
               onFocus={() => focusWindow(w.id)}
               onClose={() => closeWindow(w.id)}
+              openFromRect={w.openFromRect ?? null}
               headerLeft={
                 <ProjectsHeaderLeft
                   openProjectId={openProjectId}

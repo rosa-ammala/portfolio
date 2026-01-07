@@ -103,17 +103,18 @@ const PROJECTS: Project[] = [
     description:
       "A desktop-style portfolio that mimics an operating system UI. The goal was to create a playful experience while keeping the content easy to browse—especially on smaller screens.",
     highlights: [
-      "Window system with a shared Window component (title bar + close button)",
-      "Scrollable window content so long pages stay usable on small screens",
-      "Icon-based navigation with a desktop layout and consistent cursor style",
-      "Projects section designed to scale: list view → project detail view",
+      "Desktop-style movable window system with shared Window component",
+      "Scrollable window content with responsive size and viewport clamping",
+      "Icon-based desktop navigation with single-instance windows and focus handling",
+      "Projects flow designed to scale: list view → per-window project details",
     ],
     whatIDid: [
-      "Designed the UI concept and visual style (desktop grid + windows).",
-      "Built reusable components (Window, DesktopIcon, window content views).",
-      "Improved responsive behavior: constrained window height + internal scroll.",
-      "Created a project structure that supports images + links per project.",
-      "Deployed to Vercel."
+      "Designed the desktop-like UI concept and visual style",
+      "Built reusable window and icon components with per-window state",
+      "Implemented window movement, layering (z-index), focus, and Esc-to-close behavior",
+      "Handled responsive edge cases (viewport resize, content size changes)",
+      "Structured projects to support images, links, and detail views",
+      "Deployed the app to Vercel",
     ],
     links: [
       //{ label: "Live site", href: "#" },

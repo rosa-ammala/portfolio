@@ -10,6 +10,7 @@ export function Window({
   zIndex = 30,
   onFocus,
   width = 640,
+  openFromRect,
 }: {
   title: string;
   onClose: () => void;
@@ -18,6 +19,7 @@ export function Window({
   zIndex?: number;
   onFocus?: () => void;
   width?: number;
+  openFromRect?: { left: number; top: number; width: number; height: number } | null;
 }) {
   const [closeHover, setCloseHover] = useState(false);
 
@@ -34,6 +36,19 @@ export function Window({
   }>({ active: false, pointerId: null, offsetX: 0, offsetY: 0 });
 
   const [hasUserMoved, setHasUserMoved] = useState(false);
+
+  const hasPlayedOpenAnim = useRef(false);
+  const openAnimTimeoutRef = useRef<number | null>(null);
+
+  const [openAnim, setOpenAnim] = useState<
+    | {
+        transform: string;
+        opacity: number;
+        transition: string;
+        transformOrigin?: string;
+      }
+    | null
+  >(null);
 
   const centerWindow = () => {
     const el = winRef.current;
@@ -52,27 +67,126 @@ export function Window({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Clamp ONLY Y into viewport (keeps X exactly as-is)
-  const clampYIntoView = () => {
+  // "zoom from icon" open animation.
+  // Plays only once per window instance.
+  useLayoutEffect(() => {
+    if (!openFromRect) return;
+    if (hasPlayedOpenAnim.current) return;
+    if (!pos) return;
+
     const el = winRef.current;
     if (!el) return;
+
+    // Measure the final, positioned window.
+    const finalRect = el.getBoundingClientRect();
+    if (finalRect.width <= 0 || finalRect.height <= 0) return;
+
+    // Anchor: ICON TOP-CENTER -> WINDOW TOP-CENTER
+    const iconX = openFromRect.left + openFromRect.width / 2;
+    const iconY = openFromRect.top;
+
+    const winX = finalRect.left + finalRect.width / 2;
+    const winY = finalRect.top;
+
+    const dx = iconX - winX;
+    const dy = iconY - winY;
+
+    // Uniform scale + clamped small start (stays "tiny" longer)
+    const base = Math.min(
+      openFromRect.width / finalRect.width,
+      openFromRect.height / finalRect.height
+    );
+    const s = Math.max(0.10, Math.min(0.22, base));
+
+    hasPlayedOpenAnim.current = true;
+
+    // Start in "from" state (no transition), then animate to identity.
+    setOpenAnim({
+      transform: `translate(${dx}px, ${dy}px) scale(${s})`,
+      opacity: 0.85,
+      transition: "none",
+      transformOrigin: "top center",
+    });
+
+    let raf1 = 0;
+    let raf2 = 0;
+
+    raf1 = requestAnimationFrame(() => {
+      raf2 = requestAnimationFrame(() => {
+        setOpenAnim({
+          transform: "translate(0px, 0px) scale(1)",
+          opacity: 1,
+          transition:
+            "transform 420ms cubic-bezier(0.08, 0.85, 0.18, 1), opacity 260ms ease-out",
+          transformOrigin: "top center",
+        });
+
+        if (openAnimTimeoutRef.current) window.clearTimeout(openAnimTimeoutRef.current);
+        openAnimTimeoutRef.current = window.setTimeout(() => {
+          setOpenAnim(null);
+          openAnimTimeoutRef.current = null;
+        }, 700);
+      });
+    });
+
+    return () => {
+      if (raf1) cancelAnimationFrame(raf1);
+      if (raf2) cancelAnimationFrame(raf2);
+      if (openAnimTimeoutRef.current) {
+        window.clearTimeout(openAnimTimeoutRef.current);
+        openAnimTimeoutRef.current = null;
+      }
+    };
+  }, [openFromRect, pos]);
+
+  // Clamp into viewport
+  const clampIntoView = (opts?: { x?: boolean; y?: boolean }) => {
+    const el = winRef.current;
+    if (!el) return;
+
+    const doX = opts?.x ?? false;
+    const doY = opts?.y ?? true; // default: y
 
     const rect = el.getBoundingClientRect();
     const margin = 8;
 
-    // Where we'd like the top to be so the window fits:
-    const minTop = margin;
-    const maxTop = window.innerHeight - rect.height - margin;
+    let dx = 0;
+    let dy = 0;
 
-    // If window taller than viewport (rare), just pin to margin
-    const clampedTop = Math.min(Math.max(rect.top, minTop), Math.max(minTop, maxTop));
+    if (doX) {
+      const minLeft = margin;
+      const maxLeft = window.innerWidth - rect.width - margin;
 
-    const delta = clampedTop - rect.top;
-    if (Math.abs(delta) < 1) return;
+      // If window wider than viewport, pin to margin
+      const clampedLeft = Math.min(
+        Math.max(rect.left, minLeft),
+        Math.max(minLeft, maxLeft)
+      );
+
+      dx = clampedLeft - rect.left;
+    }
+
+    if (doY) {
+      const minTop = margin;
+      const maxTop = window.innerHeight - rect.height - margin;
+
+      // If window taller than viewport, pin to margin
+      const clampedTop = Math.min(
+        Math.max(rect.top, minTop),
+        Math.max(minTop, maxTop)
+      );
+
+      dy = clampedTop - rect.top;
+    }
+
+    if (Math.abs(dx) < 1 && Math.abs(dy) < 1) return;
 
     setPos((p) => {
       if (!p) return p;
-      return { x: p.x, y: Math.round(p.y + delta) };
+      return {
+        x: doX ? Math.round(p.x + dx) : p.x,
+        y: doY ? Math.round(p.y + dy) : p.y,
+      };
     });
   };
 
@@ -83,10 +197,8 @@ export function Window({
 
     // ResizeObserver is supported in modern browsers; good for this case
     const ro = new ResizeObserver(() => {
-      // If user hasn't moved it, you might want to keep it centered-ish.
-      // But you asked specifically: if user moved it, don't touch X and only fix Y.
       // We'll always clamp Y (safe), and it won't move if already fine.
-      clampYIntoView();
+      clampIntoView({ y: true, x: false });
     });
 
     ro.observe(el);
@@ -97,9 +209,9 @@ export function Window({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Also clamp on viewport resize (again: only Y)
+  // Also clamp on viewport resize (only Y)
   useEffect(() => {
-    const onResize = () => clampYIntoView();
+    const onResize = () => clampIntoView({ x: true, y: true });
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -176,6 +288,19 @@ export function Window({
         flexDirection: "column",
         zIndex,
         userSelect: drag.active ? "none" : "auto",
+
+        // prevents the "jump" before the open animation starts
+        visibility: pos ? "visible" : "hidden",
+
+        ...(openAnim
+          ? {
+              transform: openAnim.transform,
+              opacity: openAnim.opacity,
+              transition: openAnim.transition,
+              transformOrigin: openAnim.transformOrigin,
+              willChange: "transform, opacity",
+            }
+          : {}),
       }}
     >
       {/* HEADER (drag handle) */}
