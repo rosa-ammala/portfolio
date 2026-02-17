@@ -121,7 +121,7 @@ const PROJECTS: Project[] = [
       { label: "GitHub", href: "https://github.com/rosa-ammala/portfolio" },
     ],
     images: [
-      { src: "/portfolio.png", alt: "Profile view" },
+      { src: "/portfolio.png", alt: "View with multiple windows open." },
     ],
   },
 ];

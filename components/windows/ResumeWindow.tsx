@@ -107,9 +107,9 @@ export function ResumeWindow() {
         title="Software Developer Commission Worker"
         period="11/2025 – now"
         description="
-          Developing and improving the look and usability of a knowledge base product using Angular (TypeScript) in an AWS environment. 
-          Projects around developing a dynamic forms feature. 
-          Including reporting and documenting completed work.
+          Designed and implemented a flexible, dynamic form template system using Angular (TypeScript) in an AWS environment, and continue to be responsible for its further development and expansion.
+          I actively develop the user interface and user experience of the knowledge base product by implementing new features and improving the structure and maintainability of the codebase.
+          I work independently on assigned project tasks and contribute to solution design.
         "
       />
 
@@ -118,8 +118,9 @@ export function ResumeWindow() {
         title="Software Developer Intern"
         period="01/2025 – 06/2025"
         description="
-          Developing and improving the look and usability of a knowledge base product using Angular (TypeScript) in an AWS environment. 
-          Including reporting and documenting completed work.
+          Contributed to the visual and usability development of a knowledge base product using Angular (TypeScript) in an AWS environment.
+          I implemented UI improvements and new view components as part of the product’s ongoing development.
+          I worked as part of a team with English as the primary working language.
         "
       />
     </div>
