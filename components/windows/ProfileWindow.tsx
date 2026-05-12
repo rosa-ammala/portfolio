@@ -114,7 +114,8 @@ export function ProfileWindow() {
         >
           <ToolTag label="Angular" variant="primary" />
           <ToolTag label="TypeScript" variant="primary" />
-          <ToolTag label="HTML5 + SCSS" variant="primary" />
+          <ToolTag label="HTML5" variant="primary" />
+          <ToolTag label="SCSS" variant="primary" />
           <ToolTag label="Figma" variant="primary" />
         </ToolGroup>
 
@@ -126,6 +127,11 @@ export function ProfileWindow() {
           <ToolTag label="AWS" />
           <ToolTag label="JavaScript" />
           <ToolTag label="React" />
+          <ToolTag label="MySQL" />
+          <ToolTag label="APIs" />
+          <ToolTag label="NodeJS" />
+          <ToolTag label="Tailwind CSS" />
+          <ToolTag label="AI-Assisted Development" />
         </ToolGroup>
       </div>
     </div>
