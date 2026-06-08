@@ -107,9 +107,9 @@ export function ResumeWindow() {
         title="Software Developer Commission Worker"
         period="11/2025 – 03/2026"
         description="
-          Designed and implemented a flexible, dynamic form template system using Angular (TypeScript) in an AWS environment, and continue to be responsible for its further development and expansion.
-          I actively develop the user interface and user experience of the knowledge base product by implementing new features and improving the structure and maintainability of the codebase.
-          I work independently on assigned project tasks and contribute to solution design.
+          Designed and implemented a flexible, dynamic form template system using Angular (TypeScript) in an AWS environment, and continued to be responsible for its further development and expansion.
+          I actively developed the user interface and user experience of the knowledge base product by implementing new features and improving the structure and maintainability of the codebase.
+          I worked independently on assigned project tasks and contributed to solution design.
         "
       />
 
